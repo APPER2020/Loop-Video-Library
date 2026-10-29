@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101114">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Loop — Video Library</title>
+<style>
+:root{color-scheme:dark;--bg:#101114;--panel:#191a20;--panel2:#202129;--line:#30313a;--text:#f4f4f6;--muted:#a5a6b2;--accent:#b7f36b;--red:#ff6b75}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
+button,input,select{font:inherit}button{cursor:pointer;border:0;border-radius:12px;padding:11px 14px;font-weight:650;background:var(--accent);color:#151711}button.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}button.danger{background:transparent;color:var(--red);border:1px solid #573038;padding:7px 10px}
+header{max-width:1100px;margin:auto;padding:26px 22px 18px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:800;letter-spacing:-.7px}.logo{width:34px;height:34px;border-radius:11px;background:var(--accent);color:#171a12;display:grid;place-items:center;font-size:16px}
+.tag{font-size:12px;color:var(--muted);border:1px solid var(--line);padding:6px 9px;border-radius:99px}
+main{max-width:1100px;margin:auto;padding:0 22px 40px}.hero{padding:25px 0 20px}.hero h1{font-size:clamp(27px,5vw,40px);letter-spacing:-1.5px;margin:0 0 7px}.hero p{color:var(--muted);margin:0;max-width:650px}
+.addbox{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:17px;margin:18px 0 24px}.addbox h2{font-size:16px;margin:0 0 12px}.addrow{display:flex;gap:9px}.addrow input{flex:1;min-width:0}.field{background:#111216;color:var(--text);border:1px solid var(--line);border-radius:11px;padding:12px;width:100%;outline:none}.field:focus{border-color:var(--accent)}.addextras{display:flex;gap:10px;margin-top:10px;align-items:center}.addextras select{max-width:260px}.hint{font-size:12px;color:var(--muted);margin-top:10px}
+.layout{display:grid;grid-template-columns:220px minmax(0,1fr);gap:22px}.side{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;height:max-content}.sidehead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:13px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.7px}.side button{width:100%;text-align:left;background:transparent;color:var(--muted);padding:10px;border-radius:10px;font-weight:550;margin:2px 0}.side button.active,.side button:hover{background:var(--panel2);color:var(--text)}.side button.active{box-shadow:inset 3px 0 var(--accent)}.side .newplaylist{margin-top:8px;border:1px dashed var(--line);text-align:center;color:var(--accent)}
+.contenthead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:2px 0 14px}.contenthead h2{font-size:21px;letter-spacing:-.5px;margin:0}.search{max-width:260px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.video{overflow:hidden;background:var(--panel);border:1px solid var(--line);border-radius:16px}.thumb{position:relative;aspect-ratio:16/9;background:#262730;display:block;width:100%;border:0;border-radius:0;padding:0;overflow:hidden}.thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .2s}.thumb:hover img{transform:scale(1.035)}.play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#111d;color:white;border:1px solid #ffffff50;border-radius:50%;width:48px;height:48px;display:grid;place-items:center;font-size:18px}.vbody{padding:12px}.vtitle{font-weight:700;line-height:1.35;margin:0 0 6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.vmeta{font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:8px}.vactions{display:flex;gap:7px;margin-top:12px}.vactions button{font-size:12px;padding:8px 9px}.vactions .secondary{flex:1}.empty{border:1px dashed var(--line);border-radius:16px;padding:34px 20px;text-align:center;color:var(--muted);grid-column:1/-1}.empty strong{display:block;color:var(--text);font-size:17px;margin-bottom:6px}.notice{margin-top:20px;border:1px solid #51492a;background:#242218;color:#e7dfb6;padding:13px 15px;border-radius:13px;font-size:12px}.notice strong{color:#fff1a6}
+.modal{position:fixed;inset:0;background:#000c;z-index:5;display:none;align-items:center;justify-content:center;padding:18px}.modal.show{display:flex}.modalbox{width:min(900px,100%);background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden}.modalhead{display:flex;justify-content:space-between;align-items:center;padding:12px 15px;gap:10px}.modalhead strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.modalhead button{padding:7px 11px}.player{aspect-ratio:16/9;background:#000}.player iframe{width:100%;height:100%;border:0}.modalfoot{padding:12px 15px;color:var(--muted);font-size:12px}
+@media(max-width:680px){header{padding:18px 15px}main{padding:0 15px 28px}.tag{display:none}.addrow{flex-direction:column}.addextras{flex-direction:column;align-items:stretch}.addextras select{max-width:none}.layout{grid-template-columns:1fr;gap:15px}.side{padding:10px}.sidehead{margin:2px 4px 8px}.sideitems{display:flex;overflow-x:auto;gap:4px}.sideitems button{white-space:nowrap;width:auto;flex:0 0 auto}.side .newplaylist{width:100%;margin-top:6px}.grid{grid-template-columns:1fr}.contenthead{align-items:flex-start;flex-direction:column}.search{max-width:none}.hero{padding-top:20px}}
+</style>
+</head>
+<body>
+<header><div class="brand"><span class="logo">▶</span> Loop <span style="font-size:12px;color:var(--muted);font-weight:500;letter-spacing:0">your video library</span></div><span class="tag">PERSONAL PROTOTYPE · V1</span></header>
+<main>
+<section class="hero"><h1>Your videos, your way.</h1><p>Save YouTube links, build playlists, and keep your collection organized in one place.</p></section>
+<section class="addbox">
+<h2>＋ Add a YouTube video</h2>
+<div class="addrow"><input id="url" class="field" placeholder="Paste a YouTube link…" autocomplete="url"><button id="add">Save video</button></div>
+<div class="addextras"><select id="targetPlaylist" class="field" aria-label="Add to playlist"></select><button id="createFromAdd" class="secondary">＋ New playlist</button></div>
+<div class="hint">Supports youtube.com and youtu.be links. Your saved collection stays in this browser on this device.</div>
+</section>
+<div class="layout">
+<aside class="side"><div class="sidehead"><span>Collections</span><span id="count">0</span></div><div class="sideitems" id="playlistNav"></div><button class="newplaylist" id="newPlaylist">＋ Create playlist</button></aside>
+<section><div class="contenthead"><h2 id="sectionTitle">All videos</h2><input id="search" class="field search" placeholder="Search your library…"></div><div class="grid" id="videos"></div></section>
+</div>
+<div class="notice"><strong>Background playback note:</strong> This prototype saves and organizes links and plays videos through YouTube's embedded player while the player is open. It does not currently provide background playback when the app/browser is minimized or the iPhone is locked. YouTube's developer policies prohibit apps using its API from enabling that behavior. We'll treat background listening as a separate feasibility task rather than imply this version already supports it.</div>
+</main>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Video player"><div class="modalbox"><div class="modalhead"><strong id="modalTitle">Now playing</strong><button class="secondary" id="close">Close ✕</button></div><div class="player" id="player"></div><div class="modalfoot">Playback is provided by YouTube. Background playback is not supported in this prototype.</div></div></div>
+<script>
+const KEY='loop-video-library-v1';
+const defaultState={videos:[],playlists:[{id:'all',name:'All videos'},{id:'watch-later',name:'Watch later'}],active:'all'};
+let state;
+try{state=JSON.parse(localStorage.getItem(KEY))||defaultState}catch(e){state=defaultState}
+if(!state.playlists||!state.videos)state=defaultState;
+const $=id=>document.getElementById(id);
+const save=()=>localStorage.setItem(KEY,JSON.stringify(state));
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function parseId(raw){try{const u=new URL(raw.trim());if(['youtu.be'].includes(u.hostname.toLowerCase()))return u.pathname.split('/').filter(Boolean)[0]||null;if(u.hostname.toLowerCase().endsWith('youtube.com')||u.hostname.toLowerCase()==='youtube-nocookie.com'){if(u.pathname==='/watch')return u.searchParams.get('v');const p=u.pathname.split('/').filter(Boolean);if(['embed','shorts','live','v'].includes(p[0]))return p[1]||null}}catch(e){}return null}
+function currentPlaylist(){return state.playlists.find(p=>p.id===state.active)||state.playlists[0]}
+function render(){
+ const nav=$('playlistNav');nav.innerHTML=state.playlists.map(p=>`<button class="${p.id===state.active?'active':''}" data-pl="${esc(p.id)}">${esc(p.name)} <span style="opacity:.6">· ${p.id==='all'?state.videos.length:state.videos.filter(v=>v.playlists.includes(p.id)).length}</span></button>`).join('');
+ nav.querySelectorAll('[data-pl]').forEach(b=>b.onclick=()=>{state.active=b.dataset.pl;render()});
+ $('count').textContent=state.videos.length;
+ $('sectionTitle').textContent=currentPlaylist().name;
+ const select=$('targetPlaylist');const old=select.value;select.innerHTML='<option value="">Save without playlist</option>'+state.playlists.filter(p=>p.id!=='all').map(p=>`<option value="${esc(p.id)}">${esc(p.name)}</option>`).join('');if([...select.options].some(o=>o.value===old))select.value=old;
+ const q=$('search').value.toLowerCase().trim();
+ let list=state.videos.filter(v=>(state.active==='all'||v.playlists.includes(state.active))&&(`${v.title} ${v.url}`.toLowerCase().includes(q)));
+ const wrap=$('videos');
+ if(!list.length){wrap.innerHTML=`<div class="empty"><strong>${q?'No matching videos':'Your library is ready'}</strong>${q?'Try another search.':'Paste a YouTube link above to save your first video.'}</div>`;return}
+ wrap.innerHTML=list.map(v=>`<article class="video"><button class="thumb" data-play="${esc(v.id)}" aria-label="Play ${esc(v.title)}"><img loading="lazy" src="https://i.ytimg.com/vi/${encodeURIComponent(v.id)}/hqdefault.jpg" alt=""><span class="play">▶</span></button><div class="vbody"><p class="vtitle">${esc(v.title)}</p><div class="vmeta"><span>Saved video</span><span>${v.playlists.length} playlist${v.playlists.length===1?'':'s'}</span></div><div class="vactions"><button class="secondary" data-play="${esc(v.id)}">▶ Play here</button><button class="secondary" data-edit="${esc(v.id)}">Playlist</button><button class="danger" data-delete="${esc(v.id)}">Remove</button></div></div></article>`).join('');
+ wrap.querySelectorAll('[data-play]').forEach(b=>b.onclick=()=>playVideo(b.dataset.play));
+ wrap.querySelectorAll('[data-delete]').forEach(b=>b.onclick=()=>{state.videos=state.videos.filter(v=>v.id!==b.dataset.delete);save();render()});
+ wrap.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editVideo(b.dataset.edit));
+}
+function createPlaylist(){const name=prompt('Name your playlist:');if(!name||!name.trim())return;const id='pl-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,6);state.playlists.push({id,name:name.trim()});state.active=id;save();render();$('targetPlaylist').value=id}
+function addVideo(){const raw=$('url').value.trim();const id=parseId(raw);if(!id||! /^[\w-]{11}$/.test(id)){alert('Please enter a valid YouTube video URL (not a channel or playlist link).');return}let v=state.videos.find(x=>x.id===id);if(!v){v={id,url:'https://www.youtube.com/watch?v='+id,title:'YouTube video '+id,playlists:[]};state.videos.unshift(v)}const pl=$('targetPlaylist').value;if(pl&&!v.playlists.includes(pl))v.playlists.push(pl);$('url').value='';state.active=pl||'all';save();render();if(!v.title.startsWith('YouTube video'))return;fetchTitle(v)}
+async function fetchTitle(v){try{const r=await fetch('https://www.youtube.com/oembed?url='+encodeURIComponent(v.url)+'&format=json');if(r.ok){const data=await r.json();v.title=data.title||v.title;save();render()}}catch(e){/* A title lookup can be blocked by browser/network settings; saved link still works. */}}
+function editVideo(id){const v=state.videos.find(x=>x.id===id);if(!v)return;const choices=state.playlists.filter(p=>p.id!=='all');const msg='Enter playlist numbers separated by commas, or leave blank to remove this video from all playlists:\n'+choices.map((p,i)=>`${i+1}. ${p.name}`).join('\n');const answer=prompt(msg,v.playlists.map(pid=>choices.findIndex(p=>p.id===pid)+1).filter(n=>n>0).join(', '));if(answer===null)return;const nums=answer.split(',').map(x=>parseInt(x.trim(),10)).filter(n=>n>=1&&n<=choices.length);v.playlists=[...new Set(nums.map(n=>choices[n-1].id))];save();render()}
+function playVideo(id){const v=state.videos.find(x=>x.id===id);if(!v)return;$('modalTitle').textContent=v.title;$('player').innerHTML=`<iframe src="https://www.youtube.com/embed/${encodeURIComponent(id)}?autoplay=1&rel=0" title="${esc(v.title)}" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;$('modal').classList.add('show')}
+function closePlayer(){$('modal').classList.remove('show');$('player').innerHTML=''}
+$('add').onclick=addVideo;$('url').addEventListener('keydown',e=>{if(e.key==='Enter')addVideo()});$('newPlaylist').onclick=createPlaylist;$('createFromAdd').onclick=()=>{createPlaylist()};$('search').addEventListener('input',render);$('close').onclick=closePlayer;$('modal').addEventListener('click',e=>{if(e.target===$('modal'))closePlayer()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closePlayer()});render();
+</script>
+</body>
+</html>
